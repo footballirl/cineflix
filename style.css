@@ -377,3 +377,82 @@ footer p {
   background: #e50914;
   border-color: #e50914;
 }
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.genre-tags span {
+  background: #333;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.cast-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 0;
+}
+
+.cast-card {
+  min-width: 95px;
+  max-width: 95px;
+  text-align: center;
+}
+
+.cast-card img {
+  width: 85px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+.cast-card p {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #ddd;
+}
+
+.trailer-frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  margin: 15px 0;
+  border-radius: 8px;
+}
+
+.similar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.similar-grid img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.similar-grid p {
+  font-size: 11px;
+}
+
+@media (max-width: 500px) {
+  .similar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

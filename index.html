@@ -120,12 +120,34 @@
         <button class="close-modal" id="closeModal">✕</button>
         <img id="modalPoster" src="" alt="Movie poster">
         <div class="modal-info">
-          <h2 id="modalTitle"></h2>
-          <p id="modalRating"></p>
-          <p id="modalOverview"></p>
-          <button id="watchMovieBtn" class="btn-primary">
-            Watch Movie
-          </button>
+  <h2 id="modalTitle"></h2>
+
+  <p id="modalRating"></p>
+  <p id="modalMeta"></p>
+
+  <div id="modalGenres" class="genre-tags"></div>
+
+  <p id="modalOverview"></p>
+
+  <h3>Cast</h3>
+  <div id="modalCast" class="cast-list">
+    Loading cast...
+  </div>
+
+  <div id="modalTrailer"></div>
+
+  <div class="modal-actions">
+    <button id="watchMovieBtn" class="btn-primary">
+      Watch Movie
+    </button>
+
+    <button id="addToListBtn" class="btn-secondary">
+      + My List
+    </button>
+  </div>
+
+  <h3>More Like This</h3>
+  <div id="similarMovies" class="similar-grid"></div>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 
-const API_KEY = "PASTE_YOUR_TMDB_V3_API_KEY_HERE";
+const API_KEY = "39c0d8da697b241ce720493f19b24c48";
 const API_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_URL = "https://image.tmdb.org/t/p/original";

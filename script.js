@@ -204,3 +204,29 @@ $("closePlayer").addEventListener("click", () => {
 });
 
 loadHomePage();
+async function loadGenre(genreId, button) {
+  const section = $("genreResults");
+
+  section.hidden = false;
+  $("genreMovies").textContent = "Loading movies...";
+
+  document.querySelectorAll(".category-list button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  button.classList.add("active");
+
+  const movies = await getMovies(
+    `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc`
+  );
+
+  displayMovies("genreMovies", movies);
+
+  section.scrollIntoView({ behavior: "smooth" });
+}
+
+document.querySelectorAll(".category-list button")
+  .forEach(button => {
+    button.addEventListener("click", () => {
+      loadGenre(button.dataset.genre, button);
+    });
+  });

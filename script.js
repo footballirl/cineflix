@@ -1,6 +1,6 @@
 
 const API_KEY = "39c0d8da697b241ce720493f19b24c48";
-const API_URL = "https://api.themoviedb.org/3";
+const API_URL = "https://cineflix-api.arounarazak140.workers.dev/";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 
@@ -14,15 +14,16 @@ const $ = (id) => document.getElementById(id);
 async function getMovies(endpoint) {
   try {
     const response = await fetch(
-      `${API_URL}${endpoint}${endpoint.includes("?") ? "&" : "?"}api_key=${API_KEY}`
+      `${API_URL}${endpoint}`
     );
 
     if (!response.ok) {
-      throw new Error(`TMDB error: ${response.status}`);
+      throw new Error(`API error: ${response.status}`);
     }
 
     const data = await response.json();
     return data.results || [];
+
   } catch (error) {
     console.error(error);
     return [];

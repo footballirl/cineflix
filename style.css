@@ -348,3 +348,32 @@ footer p {
     width: 160px;
   }
 }
+.category-section {
+  padding: 25px 5%;
+}
+
+.category-section h2 {
+  margin-bottom: 18px;
+}
+
+.category-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.category-list button {
+  background: #252525;
+  color: white;
+  border: 1px solid #444;
+  white-space: nowrap;
+  border-radius: 20px;
+  padding: 11px 20px;
+}
+
+.category-list button:hover,
+.category-list button.active {
+  background: #e50914;
+  border-color: #e50914;
+}

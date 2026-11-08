@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>CineFlix - Watch Movies Online</title>
+  <meta name="description" content="Discover movies, explore trending films and watch authorized free movies on CineFlix.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a href="#" class="logo">CINE<span>FLIX</span></a>
+
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#trending">Trending</a>
+      <a href="#movies">Movies</a>
+      <a href="#free-movies">Free Movies</a>
+    </nav>
+
+    <div class="search-box">
+      <input type="search" id="searchInput"
+        placeholder="Search movies...">
+      <button id="searchBtn">Search</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <p class="hero-label">WELCOME TO CINEFLIX</p>
+        <h1 id="heroTitle">Discover Your Next Movie</h1>
+        <p id="heroDescription">
+          Explore movies, discover new stories and enjoy cinema.
+        </p>
+        <div class="hero-buttons">
+          <button id="heroDetails" class="btn-primary">
+            Explore Movie
+          </button>
+          <a href="#trending" class="btn-secondary">
+            Explore More
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="movie-section" id="trending">
+      <div class="section-heading">
+        <h2>Trending Now</h2>
+        <span>Popular this week</span>
+      </div>
+      <div class="movie-grid" id="trendingMovies">
+        <p>Loading movies...</p>
+      </div>
+    </section>
+
+    <section class="movie-section" id="movies">
+      <div class="section-heading">
+        <h2>Popular Movies</h2>
+        <span>Discover movies</span>
+      </div>
+      <div class="movie-grid" id="popularMovies">
+        <p>Loading movies...</p>
+      </div>
+    </section>
+
+    <section class="movie-section">
+      <div class="section-heading">
+        <h2>Top Rated</h2>
+        <span>Audience favorites</span>
+      </div>
+      <div class="movie-grid" id="topRatedMovies">
+        <p>Loading movies...</p>
+      </div>
+    </section>
+
+    <section class="movie-section" id="free-movies">
+      <div class="section-heading">
+        <h2>Free to Watch</h2>
+        <span>Authorized full-length films</span>
+      </div>
+      <div class="movie-grid" id="freeMovies">
+        <p>Loading authorized films...</p>
+      </div>
+    </section>
+
+    <section class="movie-section" id="searchResults" hidden>
+      <div class="section-heading">
+        <h2>Search Results</h2>
+      </div>
+      <div class="movie-grid" id="searchMovies"></div>
+    </section>
+
+    <section class="details-modal" id="movieModal" hidden>
+      <div class="modal-content">
+        <button class="close-modal" id="closeModal">✕</button>
+        <img id="modalPoster" src="" alt="Movie poster">
+        <div class="modal-info">
+          <h2 id="modalTitle"></h2>
+          <p id="modalRating"></p>
+          <p id="modalOverview"></p>
+          <button id="watchMovieBtn" class="btn-primary">
+            Watch Movie
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="player-section" id="playerSection" hidden>
+      <div class="player-header">
+        <h2 id="playerTitle">Now Playing</h2>
+        <button id="closePlayer">Close Player</button>
+      </div>
+      <div class="video-container" id="videoContainer">
+        <p>Select an authorized film to start watching.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="#" class="logo">CINE<span>FLIX</span></a>
+    <p>Discover movies. Enjoy cinema.</p>
+    <p class="copyright">
+      © 2026 CineFlix. Movie information provided by TMDB.
+      This product uses the TMDB API but is not endorsed or certified by TMDB.
+    </p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

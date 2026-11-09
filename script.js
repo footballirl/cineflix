@@ -311,6 +311,84 @@ $("closePlayer").addEventListener("click", () => {
   $("playerSection").hidden = true;
 });
 
+
+function getMyList() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("cineflixMyList")
+    ) || [];
+  } catch {
+    return [];
+  }
+}
+
+function addToMyList(movie) {
+  const list = getMyList();
+
+  if (list.some(item => item.id === movie.id)) {
+    alert("This movie is already in your list.");
+    return;
+  }
+
+  list.push({
+    id: movie.id,
+    title: movie.title,
+    poster_path: movie.poster_path,
+    vote_average: movie.vote_average,
+    release_date: movie.release_date,
+    overview: movie.overview
+  });
+
+  localStorage.setItem(
+    "cineflixMyList",
+    JSON.stringify(list)
+  );
+
+  displayMyList();
+  alert("Movie added to My List!");
+}
+
+function displayMyList() {
+  const movies = getMyList();
+  const container = $("myListMovies");
+
+  container.replaceChildren();
+
+  if (!movies.length) {
+    container.textContent = "No saved movies yet.";
+    return;
+  }
+
+  movies.forEach(movie => {
+    const card = createMovieCard(movie);
+
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.style.marginTop = "8px";
+    remove.style.background = "#333";
+    remove.style.color = "white";
+
+    remove.addEventListener("click", event => {
+      event.stopPropagation();
+
+      const updated = getMyList().filter(
+        item => item.id !== movie.id
+      );
+
+      localStorage.setItem(
+        "cineflixMyList",
+        JSON.stringify(updated)
+      );
+
+      displayMyList();
+    });
+
+    card.appendChild(remove);
+    container.appendChild(card);
+  });
+}
+
+
 loadHomePage();
 async function loadGenre(genreId, button) {
   const section = $("genreResults");

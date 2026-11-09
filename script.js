@@ -507,5 +507,85 @@ document.querySelectorAll(".category-list button")
 
 // START CINEFLIX
 
+// LOAD MORE MOVIES
+
+const moviePages = {
+  trending: 1,
+  popular: 1,
+  topRated: 1
+};
+
+const loadingMore = {
+  trending: false,
+  popular: false,
+  topRated: false
+};
+
+async function loadMoreMovies(type, endpoint, containerId, buttonId) {
+  if (loadingMore[type]) return;
+
+  const button = $(buttonId);
+
+  loadingMore[type] = true;
+  button.disabled = true;
+  button.textContent = "Loading...";
+
+  const nextPage = moviePages[type] + 1;
+
+  const movies = await getMovies(
+    `${endpoint}?page=${nextPage}`
+  );
+
+  const container = $(containerId);
+
+  if (movies.length) {
+    movies.forEach(movie => {
+      container.appendChild(createMovieCard(movie));
+    });
+
+    moviePages[type] = nextPage;
+    button.textContent = "Load More";
+  } else {
+    button.textContent = "No More Movies";
+    button.disabled = true;
+  }
+
+  loadingMore[type] = false;
+
+  if (movies.length) {
+    button.disabled = false;
+  }
+}
+
+
+// BUTTON EVENTS
+
+$("loadMoreTrending").addEventListener("click", () => {
+  loadMoreMovies(
+    "trending",
+    "/trending/movie/week",
+    "trendingMovies",
+    "loadMoreTrending"
+  );
+});
+
+$("loadMorePopular").addEventListener("click", () => {
+  loadMoreMovies(
+    "popular",
+    "/movie/popular",
+    "popularMovies",
+    "loadMorePopular"
+  );
+});
+
+$("loadMoreTopRated").addEventListener("click", () => {
+  loadMoreMovies(
+    "topRated",
+    "/movie/top_rated",
+    "topRatedMovies",
+    "loadMoreTopRated"
+  );
+});
+
 displayMyList();
 loadHomePage();

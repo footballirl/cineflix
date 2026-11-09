@@ -11,24 +11,27 @@ const FREE_MOVIES = [];
 
 const $ = (id) => document.getElementById(id);
 
+
+async function apiFetch(endpoint) {
+  const response = await fetch(`${API_URL}${endpoint}`);
+
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+
+  return response.json();
+}
+
 async function getMovies(endpoint) {
   try {
-    const response = await fetch(
-      `${API_URL}${endpoint}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await apiFetch(endpoint);
     return data.results || [];
-
   } catch (error) {
-    console.error(error);
+    console.error("CineFlix API:", error);
     return [];
   }
 }
+
 
 function createMovieCard(movie) {
   const card = document.createElement("article");
@@ -69,7 +72,10 @@ function displayMovies(containerId, movies) {
   });
 }
 
-function showMovieDetails(movie) {
+
+async function showMovieDetails(movie) {
+  $("movieModal").hidden = false;
+
   $("modalTitle").textContent = movie.title || "Movie details";
   $("modalRating").textContent =
     `⭐ ${Number(movie.vote_average || 0).toFixed(1)} / 10`;
@@ -81,20 +87,121 @@ function showMovieDetails(movie) {
     ? IMAGE_URL + movie.poster_path
     : "https://placehold.co/300x450/222/fff?text=No+Poster";
 
+  $("modalMeta").textContent = "Loading movie information...";
+  $("modalGenres").replaceChildren();
+  $("modalCast").textContent = "Loading cast...";
+  $("modalTrailer").replaceChildren();
+  $("similarMovies").textContent = "Loading recommendations...";
+
+  try {
+    const [details, credits, videos, similar] =
+      await Promise.all([
+        apiFetch(`/movie/${movie.id}`),
+        apiFetch(`/movie/${movie.id}/credits`),
+        apiFetch(`/movie/${movie.id}/videos`),
+        apiFetch(`/movie/${movie.id}/similar`)
+      ]);
+
+    $("modalMeta").textContent =
+      `${details.release_date || "Release date unknown"} · ` +
+      `${details.runtime ? details.runtime + " min" : "Runtime unknown"}`;
+
+    details.genres.forEach(genre => {
+      const tag = document.createElement("span");
+      tag.textContent = genre.name;
+      $("modalGenres").appendChild(tag);
+    });
+
+    $("modalCast").replaceChildren();
+
+    credits.cast.slice(0, 10).forEach(person => {
+      const card = document.createElement("div");
+      card.className = "cast-card";
+
+      const img = document.createElement("img");
+      img.src = person.profile_path
+        ? IMAGE_URL + person.profile_path
+        : "https://placehold.co/100x120/222/fff?text=Actor";
+
+      img.alt = person.name;
+
+      const name = document.createElement("p");
+      name.textContent = person.name;
+
+      const character = document.createElement("p");
+      character.textContent = person.character || "";
+
+      card.append(img, name, character);
+      $("modalCast").appendChild(card);
+    });
+
+    const trailer = videos.results.find(
+      video => video.site === "YouTube" &&
+      video.type === "Trailer" &&
+      video.official
+    ) || videos.results.find(
+      video => video.site === "YouTube" &&
+      video.type === "Trailer"
+    );
+
+    if (trailer) {
+      const frame = document.createElement("iframe");
+      frame.className = "trailer-frame";
+      frame.src =
+        `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailer.key)}`;
+
+      frame.title = `${movie.title} trailer`;
+      frame.allowFullscreen = true;
+      frame.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+
+      $("modalTrailer").appendChild(frame);
+    } else {
+      $("modalTrailer").textContent = "No trailer available.";
+    }
+
+    $("similarMovies").replaceChildren();
+
+    similar.results.slice(0, 6).forEach(item => {
+      const card = document.createElement("div");
+      const img = document.createElement("img");
+
+      img.src = item.poster_path
+        ? IMAGE_URL + item.poster_path
+        : "https://placehold.co/150x225/222/fff?text=No+Poster";
+
+      img.alt = item.title;
+      img.loading = "lazy";
+
+      const title = document.createElement("p");
+      title.textContent = item.title;
+
+      card.append(img, title);
+      card.addEventListener("click", () => showMovieDetails(item));
+
+      $("similarMovies").appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Movie details:", error);
+    $("modalMeta").textContent =
+      "Unable to load additional movie information.";
+  }
+
   $("watchMovieBtn").onclick = () => {
     const film = FREE_MOVIES.find(item => item.id === movie.id);
 
     if (film) {
       playMovie(film);
     } else {
-      alert(
-        "This movie is currently available for discovery only. No authorized full-length stream has been added."
-      );
+      alert("No authorized full-length stream has been added for this movie yet.");
     }
   };
 
-  $("movieModal").hidden = false;
+  $("addToListBtn").onclick = () => {
+    addToMyList(movie);
+  };
 }
+
 
 function playMovie(film) {
   $("movieModal").hidden = true;

@@ -37,9 +37,94 @@ async function loadFreeMovies() {
     "/discover/movie?watch_region=AE&with_watch_monetization_types=free%7Cads&with_original_language=en&sort_by=popularity.desc"
   );
 
-  displayMovies("freeMovies", movies);
+  const freeMovies = await Promise.all(
+    movies.map(async movie => {
+      try {
+        const data = await apiFetch(
+          `/movie/${movie.id}/watch/providers`
+        );
+
+        const region = data.results?.AE;
+
+        return {
+          ...movie,
+          freeProviders: region?.free || [],
+          adsProviders: region?.ads || [],
+          watchLink: region?.link || null
+        };
+      } catch (error) {
+        console.error("Provider error:", error);
+        return {
+          ...movie,
+          freeProviders: [],
+          adsProviders: [],
+          watchLink: null
+        };
+      }
+    })
+  );
+
+  displayFreeMovies(freeMovies);
 }
 
+
+function displayFreeMovies(movies) {
+  const container = $("freeMovies");
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const availableMovies = movies.filter(movie =>
+    movie.freeProviders.length || movie.adsProviders.length
+  );
+
+  if (!availableMovies.length) {
+    container.textContent =
+      "No free or ad-supported movies currently found in the UAE.";
+    return;
+  }
+
+  availableMovies.forEach(movie => {
+    const card = createMovieCard(movie);
+
+    const providers = document.createElement("p");
+
+    const names = [
+      ...movie.freeProviders.map(p => `${p.provider_name} (Free)`),
+      ...movie.adsProviders.map(p => `${p.provider_name} (Ads)`)
+    ];
+
+    providers.textContent = names.join(" · ");
+    card.appendChild(providers);
+
+    if (movie.watchLink) {
+      const link = document.createElement("a");
+
+      link.href = movie.watchLink;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Find where to watch";
+
+      link.addEventListener("click", event => {
+        event.stopPropagation();
+      });
+
+      card.appendChild(link);
+    }
+
+    container.appendChild(card);
+  });
+
+  const credit = document.createElement("p");
+  credit.textContent =
+    "Streaming availability data provided by JustWatch via TMDB.";
+
+  credit.style.gridColumn = "1 / -1";
+  credit.style.fontSize = "12px";
+
+  container.appendChild(credit);
+}
 
 
 // MOVIE CARDS

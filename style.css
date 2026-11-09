@@ -736,3 +736,124 @@ footer p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* FINAL CINEFLIX POPUP LAYOUT FIX */
+
+.details-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 12px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.modal-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+
+  width: 100% !important;
+  max-width: 850px !important;
+  min-width: 0 !important;
+
+  max-height: 92vh !important;
+  padding: 20px !important;
+  gap: 15px !important;
+
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* Poster */
+.modal-content > img {
+  display: block !important;
+  width: 130px !important;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 0 auto !important;
+}
+
+/* Information */
+.modal-info {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: none !important;
+  overflow: hidden !important;
+}
+
+.modal-info * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-info p {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+/* Buttons */
+.modal-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 18px 0 !important;
+}
+
+/* Trailer */
+#modalTrailer {
+  display: block !important;
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 10px 0 20px !important;
+}
+
+#modalTrailer iframe,
+.trailer-frame {
+  display: block !important;
+  width: 100% !important;
+  max-width: 400px !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9 !important;
+  border: 0 !important;
+  border-radius: 10px !important;
+}
+
+/* Cast */
+.cast-list {
+  display: flex !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  gap: 12px !important;
+}
+
+.cast-card {
+  flex: 0 0 95px !important;
+  min-width: 95px !important;
+}
+
+/* Similar movies */
+.similar-grid {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+@media (max-width: 500px) {
+  .modal-content {
+    padding: 14px !important;
+  }
+
+  .similar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

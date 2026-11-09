@@ -5,29 +5,7 @@ const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 
 // Add only films you have permission to stream.
 
-const FREE_MOVIES = [
-  {
-    id: 900001,
-    title: "Wicked Little Things",
-    overview: "A supernatural horror film.",
-    poster: "https://img.youtube.com/vi/uPBWSFV0PGg/hqdefault.jpg",
-    vote_average: 0,
-    release_date: "2006",
-    type: "embed",
-    video: "https://www.youtube-nocookie.com/embed/uPBWSFV0PGg"
-  },
-  {
-    id: 900002,
-    title: "The Stuff",
-    overview: "A science-fiction horror film.",
-    poster: "https://img.youtube.com/vi/hpSYf_AxyoI/hqdefault.jpg",
-    vote_average: 0,
-    release_date: "1985",
-    type: "embed",
-    video: "https://www.youtube-nocookie.com/embed/hpSYf_AxyoI"
-  }
-];
-
+const FREE_MOVIES = [];
 
 const $ = (id) => document.getElementById(id);
 
@@ -53,6 +31,15 @@ async function getMovies(endpoint) {
     return [];
   }
 }
+
+async function loadFreeMovies() {
+  const movies = await getMovies(
+    "/discover/movie?watch_region=AE&with_watch_monetization_types=free%7Cads&with_original_language=en&sort_by=popularity.desc"
+  );
+
+  displayMovies("freeMovies", movies);
+}
+
 
 
 // MOVIE CARDS
@@ -327,7 +314,7 @@ async function loadHomePage() {
   displayMovies("trendingMovies", trending);
   displayMovies("popularMovies", popular);
   displayMovies("topRatedMovies", topRated);
-  displayMovies("freeMovies", FREE_MOVIES);
+  await loadFreeMovies();
 
   if (trending.length) {
     const featured = trending[0];

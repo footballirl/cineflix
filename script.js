@@ -10,7 +10,7 @@ const FREE_MOVIES = [
     id: 999001,
     title: "CineFlix Player Test",
     type: "embed",
-    video: "https://www.youtube.com/embed/jfKfPfyJRdk"
+    video: "https://archive.org/embed/BigBuckBunny_124"
   }
 ];
 

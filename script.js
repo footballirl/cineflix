@@ -33,8 +33,10 @@ async function getMovies(endpoint) {
 }
 
 async function loadFreeMovies() {
+  const country = $("countrySelect").value;
+
   const movies = await getMovies(
-    "/discover/movie?watch_region=AE&with_watch_monetization_types=free%7Cads&with_original_language=en&sort_by=popularity.desc"
+    `/discover/movie?watch_region=${country}&with_watch_monetization_types=free%7Cads&with_original_language=en&sort_by=popularity.desc&page=1`
   );
 
   const freeMovies = await Promise.all(
@@ -44,7 +46,7 @@ async function loadFreeMovies() {
           `/movie/${movie.id}/watch/providers`
         );
 
-        const region = data.results?.AE;
+        const region = data.results?.[country];
 
         return {
           ...movie,
@@ -53,7 +55,6 @@ async function loadFreeMovies() {
           watchLink: region?.link || null
         };
       } catch (error) {
-        console.error("Provider error:", error);
         return {
           ...movie,
           freeProviders: [],
@@ -610,4 +611,20 @@ document.querySelectorAll(".category-list button")
 
 
 displayMyList();
+
+const countrySelect = $("countrySelect");
+
+if (countrySelect) {
+  const savedCountry = localStorage.getItem("cineflixCountry");
+
+  if (savedCountry) {
+    countrySelect.value = savedCountry;
+  }
+
+  countrySelect.addEventListener("change", () => {
+    localStorage.setItem("cineflixCountry", countrySelect.value);
+    loadFreeMovies();
+  });
+}
+
 loadHomePage();

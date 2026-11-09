@@ -494,7 +494,7 @@ footer p {
 /* Movie poster */
 .modal-content > img {
   display: block;
-  width: 135px;
+  width: 120px;
   max-width: 100%;
   height: auto;
   align-self: center;
@@ -503,7 +503,7 @@ footer p {
 
 /* Details content */
 .modal-info {
-  width: 100%;
+  width: 90%;
   min-width: 0;
   flex: 1;
   overflow-wrap: anywhere;
@@ -681,7 +681,7 @@ footer p {
 .similar-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 10px;
 }
 
 .similar-grid img {
@@ -692,9 +692,9 @@ footer p {
 }
 
 /* Tablet and mobile */
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .details-modal {
-    padding: 10px;
+    padding: 8px;
     align-items: center;
   }
 

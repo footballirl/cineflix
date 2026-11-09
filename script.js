@@ -8,7 +8,7 @@ const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 const FREE_MOVIES = [
   {
     id: 999001,
-    title: "CineFlix Player Test",
+    title: "Big Buck Bunny",
     type: "embed",
     video: "https://archive.org/embed/BigBuckBunny_124"
   }

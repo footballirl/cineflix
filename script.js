@@ -632,6 +632,5 @@ async function discoverMovies() {
 
 $("discoverBtn").addEventListener("click", discoverMovies);
 
-
 displayMyList();
 loadHomePage();

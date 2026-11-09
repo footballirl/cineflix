@@ -614,6 +614,9 @@ document.querySelectorAll(".category-list button")
   });
 
 
+$("testPlayerBtn").addEventListener("click", () => {
+  playMovie(FREE_MOVIES[0]);
+});
 // START CINEFLIX
 
 

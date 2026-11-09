@@ -108,6 +108,43 @@
       </div>
 
     </section>
+    
+<!-- DISCOVER AND FILTER MOVIES -->
+<section class="movie-section" id="discover">
+
+  <div class="section-heading">
+    <h2>Discover Movies</h2>
+    <span>Find your next favorite</span>
+  </div>
+
+  <div class="discover-controls">
+
+    <select id="sortMovies">
+      <option value="popularity.desc">Most Popular</option>
+      <option value="vote_average.desc">Highest Rated</option>
+      <option value="primary_release_date.desc">Newest First</option>
+    </select>
+
+    <input
+      type="number"
+      id="filterYear"
+      placeholder="Release year (e.g. 2026)"
+      min="1900"
+      max="2100"
+    >
+
+    <button id="discoverBtn" class="btn-primary">
+      Find Movies
+    </button>
+
+  </div>
+
+  <div class="movie-grid" id="discoverMovies">
+    <p>Choose your filters and tap Find Movies.</p>
+  </div>
+
+</section>
+    
 
 
     <!-- GENRE RESULTS -->

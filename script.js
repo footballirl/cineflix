@@ -4,7 +4,30 @@ const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 
 // Add only films you have permission to stream.
-const FREE_MOVIES = [];
+
+const FREE_MOVIES = [
+  {
+    id: 900001,
+    title: "Wicked Little Things",
+    overview: "A supernatural horror film.",
+    poster: "https://img.youtube.com/vi/uPBWSFV0PGg/hqdefault.jpg",
+    vote_average: 0,
+    release_date: "2006",
+    type: "embed",
+    video: "https://www.youtube-nocookie.com/embed/uPBWSFV0PGg"
+  },
+  {
+    id: 900002,
+    title: "The Stuff",
+    overview: "A science-fiction horror film.",
+    poster: "https://img.youtube.com/vi/hpSYf_AxyoI/hqdefault.jpg",
+    vote_average: 0,
+    release_date: "1985",
+    type: "embed",
+    video: "https://www.youtube-nocookie.com/embed/hpSYf_AxyoI"
+  }
+];
+
 
 const $ = (id) => document.getElementById(id);
 
@@ -58,7 +81,13 @@ function createMovieCard(movie) {
 
   card.append(poster, title, rating);
 
-  card.addEventListener("click", () => showMovieDetails(movie));
+  card.addEventListener("click", () => {
+  if (movie.type === "embed") {
+    playMovie(movie);
+  } else {
+    showMovieDetails(movie);
+  }
+});
 
   return card;
 }

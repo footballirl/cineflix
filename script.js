@@ -587,5 +587,51 @@ $("loadMoreTopRated").addEventListener("click", () => {
   );
 });
 
+// DISCOVER AND FILTER MOVIES
+
+async function discoverMovies() {
+  const sort = $("sortMovies").value;
+  const year = $("filterYear").value.trim();
+  const button = $("discoverBtn");
+
+  if (year && (!/^\d{4}$/.test(year) ||
+      Number(year) < 1900 ||
+      Number(year) > 2100)) {
+    alert("Please enter a valid four-digit release year.");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Searching...";
+
+  $("discoverMovies").textContent = "Finding movies...";
+
+  const params = new URLSearchParams();
+
+  params.set("sort_by", sort);
+
+  if (year) {
+    params.set("primary_release_year", year);
+  }
+
+  params.set("vote_count.gte", "10");
+
+  const movies = await getMovies(
+    `/discover/movie?${params.toString()}`
+  );
+
+  displayMovies("discoverMovies", movies);
+
+  button.disabled = false;
+  button.textContent = "Find Movies";
+
+  $("discover").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+$("discoverBtn").addEventListener("click", discoverMovies);
+
+
 displayMyList();
 loadHomePage();

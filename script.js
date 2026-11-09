@@ -1,16 +1,15 @@
 
-const API_KEY = "39c0d8da697b241ce720493f19b24c48";
-const API_URL = "https://cineflix-api.arounarazak140.workers.dev/";
+const API_URL = "https://cineflix-api.arounarazak140.workers.dev";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
 const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 
 // Add only films you have permission to stream.
-// Example format:
-// { id: 1, title: "Film title", poster: "https://...", video: "https://...", type: "mp4" }
 const FREE_MOVIES = [];
 
 const $ = (id) => document.getElementById(id);
 
+
+// API CONNECTION
 
 async function apiFetch(endpoint) {
   const response = await fetch(`${API_URL}${endpoint}`);
@@ -33,14 +32,18 @@ async function getMovies(endpoint) {
 }
 
 
+// MOVIE CARDS
+
 function createMovieCard(movie) {
   const card = document.createElement("article");
   card.className = "movie-card";
 
   const poster = document.createElement("img");
+
   poster.src = movie.poster_path
     ? IMAGE_URL + movie.poster_path
-    : "https://placehold.co/300x450/222/fff?text=No+Poster";
+    : movie.poster || "https://placehold.co/300x450/222/fff?text=No+Poster";
+
   poster.alt = movie.title || "Movie poster";
   poster.loading = "lazy";
 
@@ -48,11 +51,13 @@ function createMovieCard(movie) {
   title.textContent = movie.title || "Untitled";
 
   const rating = document.createElement("p");
-  rating.textContent = `⭐ ${Number(movie.vote_average || 0).toFixed(1)} · ${
-    (movie.release_date || "").slice(0, 4) || "N/A"
-  }`;
+
+  rating.textContent =
+    `⭐ ${Number(movie.vote_average || 0).toFixed(1)} · ` +
+    `${(movie.release_date || "").slice(0, 4) || "N/A"}`;
 
   card.append(poster, title, rating);
+
   card.addEventListener("click", () => showMovieDetails(movie));
 
   return card;
@@ -60,6 +65,9 @@ function createMovieCard(movie) {
 
 function displayMovies(containerId, movies) {
   const container = $(containerId);
+
+  if (!container) return;
+
   container.replaceChildren();
 
   if (!movies.length) {
@@ -73,10 +81,13 @@ function displayMovies(containerId, movies) {
 }
 
 
+// MOVIE DETAILS
+
 async function showMovieDetails(movie) {
   $("movieModal").hidden = false;
 
   $("modalTitle").textContent = movie.title || "Movie details";
+
   $("modalRating").textContent =
     `⭐ ${Number(movie.vote_average || 0).toFixed(1)} / 10`;
 
@@ -106,27 +117,30 @@ async function showMovieDetails(movie) {
       `${details.release_date || "Release date unknown"} · ` +
       `${details.runtime ? details.runtime + " min" : "Runtime unknown"}`;
 
-    details.genres.forEach(genre => {
+    (details.genres || []).forEach(genre => {
       const tag = document.createElement("span");
       tag.textContent = genre.name;
       $("modalGenres").appendChild(tag);
     });
 
+    // CAST
+
     $("modalCast").replaceChildren();
 
-    credits.cast.slice(0, 10).forEach(person => {
+    (credits.cast || []).slice(0, 10).forEach(person => {
       const card = document.createElement("div");
       card.className = "cast-card";
 
       const img = document.createElement("img");
+
       img.src = person.profile_path
         ? IMAGE_URL + person.profile_path
         : "https://placehold.co/100x120/222/fff?text=Actor";
 
-      img.alt = person.name;
+      img.alt = person.name || "Actor";
 
       const name = document.createElement("p");
-      name.textContent = person.name;
+      name.textContent = person.name || "Unknown";
 
       const character = document.createElement("p");
       character.textContent = person.character || "";
@@ -135,57 +149,74 @@ async function showMovieDetails(movie) {
       $("modalCast").appendChild(card);
     });
 
-    const trailer = videos.results.find(
-      video => video.site === "YouTube" &&
-      video.type === "Trailer" &&
-      video.official
-    ) || videos.results.find(
-      video => video.site === "YouTube" &&
-      video.type === "Trailer"
+    // TRAILER
+
+    const trailer = (videos.results || []).find(
+      video =>
+        video.site === "YouTube" &&
+        video.type === "Trailer" &&
+        video.official
+    ) || (videos.results || []).find(
+      video =>
+        video.site === "YouTube" &&
+        video.type === "Trailer"
     );
 
     if (trailer) {
       const frame = document.createElement("iframe");
+
       frame.className = "trailer-frame";
+
       frame.src =
         `https://www.youtube-nocookie.com/embed/${encodeURIComponent(trailer.key)}`;
 
       frame.title = `${movie.title} trailer`;
       frame.allowFullscreen = true;
-      frame.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+
+      frame.allow =
+        "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
 
       $("modalTrailer").appendChild(frame);
     } else {
       $("modalTrailer").textContent = "No trailer available.";
     }
 
+    // SIMILAR MOVIES
+
     $("similarMovies").replaceChildren();
 
-    similar.results.slice(0, 6).forEach(item => {
+    (similar.results || []).slice(0, 6).forEach(item => {
       const card = document.createElement("div");
+
       const img = document.createElement("img");
 
       img.src = item.poster_path
         ? IMAGE_URL + item.poster_path
         : "https://placehold.co/150x225/222/fff?text=No+Poster";
 
-      img.alt = item.title;
+      img.alt = item.title || "Movie";
       img.loading = "lazy";
 
       const title = document.createElement("p");
-      title.textContent = item.title;
+      title.textContent = item.title || "Untitled";
 
       card.append(img, title);
-      card.addEventListener("click", () => showMovieDetails(item));
+
+      card.addEventListener("click", () => {
+        showMovieDetails(item);
+      });
 
       $("similarMovies").appendChild(card);
     });
 
   } catch (error) {
     console.error("Movie details:", error);
+
     $("modalMeta").textContent =
       "Unable to load additional movie information.";
   }
+
+  // WATCH BUTTON
 
   $("watchMovieBtn").onclick = () => {
     const film = FREE_MOVIES.find(item => item.id === movie.id);
@@ -193,15 +224,21 @@ async function showMovieDetails(movie) {
     if (film) {
       playMovie(film);
     } else {
-      alert("No authorized full-length stream has been added for this movie yet.");
+      alert(
+        "No authorized full-length stream has been added for this movie yet."
+      );
     }
   };
+
+  // MY LIST BUTTON
 
   $("addToListBtn").onclick = () => {
     addToMyList(movie);
   };
 }
 
+
+// VIDEO PLAYER
 
 function playMovie(film) {
   $("movieModal").hidden = true;
@@ -213,6 +250,7 @@ function playMovie(film) {
 
   if (film.type === "mp4") {
     const video = document.createElement("video");
+
     video.controls = true;
     video.autoplay = true;
     video.playsInline = true;
@@ -220,31 +258,36 @@ function playMovie(film) {
     video.style.height = "100%";
 
     const source = document.createElement("source");
+
     source.src = film.video;
     source.type = "video/mp4";
 
     video.appendChild(source);
     container.appendChild(video);
+
   } else if (film.type === "embed") {
     const frame = document.createElement("iframe");
+
     frame.src = film.video;
     frame.title = film.title;
     frame.allowFullscreen = true;
     frame.allow = "fullscreen; picture-in-picture";
+
     container.appendChild(frame);
+
   } else {
     container.textContent = "Unsupported video format.";
   }
 
-  $("playerSection").scrollIntoView({ behavior: "smooth" });
+  $("playerSection").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
-async function loadHomePage() {
-  if (!API_KEY || API_KEY === "PASTE_YOUR_TMDB_V3_API_KEY_HERE") {
-    alert("Please add your TMDB API key inside script.js.");
-    return;
-  }
 
+// HOME PAGE
+
+async function loadHomePage() {
   const [trending, popular, topRated] = await Promise.all([
     getMovies("/trending/movie/week"),
     getMovies("/movie/popular"),
@@ -255,16 +298,18 @@ async function loadHomePage() {
   displayMovies("popularMovies", popular);
   displayMovies("topRatedMovies", topRated);
   displayMovies("freeMovies", FREE_MOVIES);
-  
+
   if (trending.length) {
     const featured = trending[0];
 
-    $("heroTitle").textContent = featured.title;
-    $("heroDescription").textContent = featured.overview;
+    $("heroTitle").textContent = featured.title || "Featured movie";
+
+    $("heroDescription").textContent =
+      featured.overview || "Discover movies on CineFlix.";
 
     const hero = document.querySelector(".hero");
 
-    if (featured.backdrop_path) {
+    if (hero && featured.backdrop_path) {
       hero.style.backgroundImage = `
         linear-gradient(90deg, #080808 5%, rgba(8,8,8,.85) 40%, transparent),
         linear-gradient(0deg, #080808, transparent 50%),
@@ -272,9 +317,14 @@ async function loadHomePage() {
       `;
     }
 
-    $("heroDetails").onclick = () => showMovieDetails(featured);
+    $("heroDetails").onclick = () => {
+      showMovieDetails(featured);
+    };
   }
 }
+
+
+// SEARCH
 
 async function searchMovies() {
   const query = $("searchInput").value.trim();
@@ -289,18 +339,29 @@ async function searchMovies() {
   );
 
   displayMovies("searchMovies", results);
-  $("searchResults").scrollIntoView({ behavior: "smooth" });
+
+  $("searchResults").scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 $("searchBtn").addEventListener("click", searchMovies);
 
 $("searchInput").addEventListener("keydown", event => {
-  if (event.key === "Enter") searchMovies();
+  if (event.key === "Enter") {
+    searchMovies();
+  }
 });
+
+
+// CLOSE MOVIE DETAILS
 
 $("closeModal").addEventListener("click", () => {
   $("movieModal").hidden = true;
 });
+
+
+// CLOSE PLAYER
 
 $("closePlayer").addEventListener("click", () => {
   const video = $("videoContainer").querySelector("video");
@@ -311,6 +372,8 @@ $("closePlayer").addEventListener("click", () => {
   $("playerSection").hidden = true;
 });
 
+
+// MY LIST
 
 function getMyList() {
   try {
@@ -345,12 +408,15 @@ function addToMyList(movie) {
   );
 
   displayMyList();
+
   alert("Movie added to My List!");
 }
 
 function displayMyList() {
   const movies = getMyList();
   const container = $("myListMovies");
+
+  if (!container) return;
 
   container.replaceChildren();
 
@@ -363,6 +429,7 @@ function displayMyList() {
     const card = createMovieCard(movie);
 
     const remove = document.createElement("button");
+
     remove.textContent = "Remove";
     remove.style.marginTop = "8px";
     remove.style.background = "#333";
@@ -389,7 +456,8 @@ function displayMyList() {
 }
 
 
-loadHomePage();
+// GENRE CATEGORIES
+
 async function loadGenre(genreId, button) {
   const section = $("genreResults");
 
@@ -407,7 +475,9 @@ async function loadGenre(genreId, button) {
 
   displayMovies("genreMovies", movies);
 
-  section.scrollIntoView({ behavior: "smooth" });
+  section.scrollIntoView({
+    behavior: "smooth"
+  });
 }
 
 document.querySelectorAll(".category-list button")
@@ -416,3 +486,9 @@ document.querySelectorAll(".category-list button")
       loadGenre(button.dataset.genre, button);
     });
   });
+
+
+// START CINEFLIX
+
+displayMyList();
+loadHomePage();

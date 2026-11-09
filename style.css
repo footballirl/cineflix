@@ -428,8 +428,8 @@ footer p {
 
 #modalTrailer {
   width: 100%;
-  max-width: 480px;
-  margin: 12px auto 20px;
+  max-width: 420px;
+  margin: 12px 0 24px;
 }
 
 .trailer-frame {
@@ -437,7 +437,6 @@ footer p {
   width: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
-  max-height: 270px;
   border: none;
   border-radius: 12px;
 }

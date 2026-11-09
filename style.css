@@ -494,7 +494,7 @@ footer p {
 /* Movie poster */
 .modal-content > img {
   display: block;
-  width: 120px;
+  width: 100px;
   max-width: 100%;
   height: auto;
   align-self: center;

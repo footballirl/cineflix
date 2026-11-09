@@ -5,7 +5,14 @@ const BACKDROP_URL = "https://image.tmdb.org/t/p/original";
 
 // Add only films you have permission to stream.
 
-const FREE_MOVIES = [];
+const FREE_MOVIES = [
+  {
+    id: 999001,
+    title: "CineFlix Player Test",
+    type: "embed",
+    video: "https://www.youtube.com/embed/jfKfPfyJRdk"
+  }
+];
 
 const $ = (id) => document.getElementById(id);
 

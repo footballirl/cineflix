@@ -85,6 +85,7 @@ function displayMovies(containerId, movies) {
 
 async function showMovieDetails(movie) {
   $("movieModal").hidden = false;
+document.body.style.overflow = "hidden";
 
   $("modalTitle").textContent = movie.title || "Movie details";
 
@@ -353,12 +354,28 @@ $("searchInput").addEventListener("keydown", event => {
   }
 });
 
-
-// CLOSE MOVIE DETAILS
-
-$("closeModal").addEventListener("click", () => {
+// CLOSE MOVIE MODAL
+function closeMovieModal() {
   $("movieModal").hidden = true;
+  document.body.style.overflow = "";
+}
+
+// Close button
+$("closeModal").addEventListener("click", closeMovieModal);
+
+// Close when clicking outside the popup
+$("movieModal").addEventListener("click", event => {
+  if (event.target === $("movieModal")) {
+    closeMovieModal();
+  }
 });
+
+// Close using Escape key
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && !$("movieModal").hidden) {
+    closeMovieModal();
+  }
+});;
 
 
 // CLOSE PLAYER

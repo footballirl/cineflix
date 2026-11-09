@@ -495,10 +495,10 @@ footer p {
 .modal-content > img {
   display: block;
   width: 100px;
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
   align-self: center;
-  border-radius: 9px;
+  border-radius: 5px;
 }
 
 /* Details content */
